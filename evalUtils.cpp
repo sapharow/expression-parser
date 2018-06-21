@@ -49,17 +49,17 @@ ValueRef parseNumber(const char*& str) {
     return nullptr;
 }
 
-ValueRef parseExpression(const char*& expr,
-                         size_t level)
-{
+static ValueRef parseExpression(const char*& expr, int& level) {
     ValueRef val;
     for (; *expr; expr++) {
         switch (*expr) {
             case '(':
                 expr++;
-                return parseExpression(expr, level+1);
+                level++;
+                return parseExpression(expr, level);
                 break;
             case ')':
+                level--;
                 return val;
                 break;
             case ' ':
@@ -96,6 +96,10 @@ ValueRef parseExpression(const char*& expr,
                     return std::make_shared<OperatorPower>(val, parseExpression(expr, level));
                     break;
                 case ')':
+                    if (level <= 0) {
+                        throw std::runtime_error("Closing bracket w/o opening one");
+                    }
+                    level--;
                     expr++;
                     return val;
                 case ' ':
@@ -110,4 +114,9 @@ ValueRef parseExpression(const char*& expr,
         break;
     }
     return val;
+}
+
+ValueRef parseExpression(const char*& str) {
+    int level = 0;
+    return parseExpression(str, level);
 }

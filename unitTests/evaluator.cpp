@@ -63,3 +63,27 @@ TEST(Evaluator, Expressions) {
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(-4, value->evaluate());
 }
+
+TEST(Evaluator, MalformedExpressions) {
+    ValueRef value;
+    
+    std::string expression = "1+*)-/2";
+    const char* exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    EXPECT_EQ(nullptr, value);
+    
+    expression = "1+2)";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    EXPECT_EQ(nullptr, value);
+    
+    expression = "(1+2))";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    EXPECT_EQ(nullptr, value);
+    
+    expression = "(1+2)+)";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    EXPECT_EQ(nullptr, value);
+}

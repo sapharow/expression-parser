@@ -3,23 +3,26 @@
 #include <unordered_map>
 #include "types.hpp"
 
+/**
+ * Evaluator supports the following:
+ * Math operations:
+ *   +  add
+ *   -  subtract
+ *   *  multiply
+ *   /  divide
+ *   ^  power
+ *
+ * Symbols:
+ *   ., decimal separators
+ *   () brackets
+ *      spaces (ignored)
+ *
+ * Extra:
+ */
 class Evaluate {
 public:
     /**
-     * Create evaluator with expression to evaluate. Supported non-numerical
-     * symbols are:
-     * +  add
-     * -  subtract
-     * *  multiply
-     * /  divide
-     * ^  power
-     * ., decimal separator
-     * () brackets
-     *
-     * Implementation notes:
-     * > Spaces are supported
-     * 
-     *
+     * Create evaluator with expression to evaluate
      * @param[in] expr Expression to evaluate
      */
     Evaluate(const std::string& expr);
