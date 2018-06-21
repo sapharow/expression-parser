@@ -62,6 +62,18 @@ TEST(Evaluator, Expressions) {
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(-4, value->evaluate());
+
+    expression = "5*+2";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NE(nullptr, value);
+    EXPECT_EQ(10, value->evaluate());
+
+    expression = "3*-2";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NE(nullptr, value);
+    EXPECT_EQ(-6, value->evaluate());
 }
 
 TEST(Evaluator, MalformedExpressions) {
