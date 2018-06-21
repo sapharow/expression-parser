@@ -2,6 +2,14 @@
 #include "number.hpp"
 #include <math.h>
 
+Operator::Registry Operator::registry = {
+    { '+', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorAdd>(l,r); }},
+    { '-', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorSubtract>(l,r); }},
+    { '/', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorDivide>(l,r); }},
+    { '*', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorMultiply>(l,r); }},
+    { '^', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorPower>(l,r); }},
+};
+
 Operator::Operator(const ValueRef& left,
                    const ValueRef& right)
 : m_Left(left)

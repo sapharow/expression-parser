@@ -13,3 +13,4 @@
 DECLREF(Value);
 DECLREF(Number);
 DECLREF(Operator);
+DECLREF(Function);

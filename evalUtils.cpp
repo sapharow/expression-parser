@@ -1,5 +1,7 @@
 #include "evalUtils.hpp"
 #include "operator.hpp"
+#include "functions.hpp"
+#include "constants.hpp"
 #include "number.hpp"
 
 /**
@@ -66,35 +68,75 @@ static ValueRef parseExpression(const char*& expr, int& level) {
                 // Skip spaces
                 continue;
                 break;
+            default: {
+                // Can be function
+                // Find next opening bracket
+                for (const char* signaturePtr = expr; *signaturePtr; signaturePtr++) {
+                    int lowerCase = *signaturePtr - 'a';
+                    int upperCase = *signaturePtr - 'A';
+                    if ((lowerCase < 0 || lowerCase >= 26) &&
+                        (upperCase < 0 || upperCase >= 26))
+                    {
+                        if (*signaturePtr == '(') {
+                            const size_t signatureSize = signaturePtr - expr;
+                            std::string signature(expr, signatureSize);
+                            auto it = Function::registry.find(signature);
+                            if (it != Function::registry.end()) {
+                                // Function found
+                                level++;
+                                expr += signatureSize+1;
+                                return it->second(parseExpression(expr, level));
+                            }
+                        } else {
+                            // Not a function
+                            break;
+                        }
+                    }
+                }
+            }
         }
         
         // Parse number
         if (!val) {
             val = parseNumber(expr);
+            if (!val) {
+                // Parse constants
+                const char* signaturePtr = expr;
+                while (*signaturePtr++) {
+                    int lowerCase = *signaturePtr - 'a';
+                    int upperCase = *signaturePtr - 'A';
+                    if ((lowerCase < 0 || lowerCase >= 26) &&
+                        (upperCase < 0 || upperCase >= 26))
+                    {
+                        const size_t signatureSize = signaturePtr - expr;
+                        std::string signature(expr, signatureSize);
+                        auto it = Constant::registry.find(signature);
+                        if (it != Constant::registry.end()) {
+                            // Constant found
+                            expr += signatureSize;
+                            val = it->second;
+                            break;
+                        }
+                    }
+                }
+
+            }
         }
         // Parse optional operator
         while (*expr) {
+            // Find operator from registry
+            auto opIt = Operator::registry.find(*expr);
+            if (opIt != Operator::registry.end()) {
+                char e = *expr;
+                expr++;
+                val = opIt->second(val, parseExpression(expr, level));
+                if (e == '*') {
+                    // TODO FIXME
+                    return val;
+                }
+                continue;
+            }
             switch (*expr) {
-                case '+':
-                    expr++;
-                    val = std::make_shared<OperatorAdd>(val, parseExpression(expr, level));
-                    break;
-                case '-':
-                    expr++;
-                    val = std::make_shared<OperatorSubtract>(val, parseExpression(expr, level));
-                    break;
-                case '/':
-                    expr++;
-                    val = std::make_shared<OperatorDivide>(val, parseExpression(expr, level));
-                    break;
-                case '*':
-                    expr++;
-                    return std::make_shared<OperatorMultiply>(val, parseExpression(expr, level));
-                    break;
-                case '^':
-                    expr++;
-                    return std::make_shared<OperatorPower>(val, parseExpression(expr, level));
-                    break;
                 case ')':
                     if (level <= 0) {
                         throw std::runtime_error("Closing bracket w/o opening one");
@@ -105,6 +147,8 @@ static ValueRef parseExpression(const char*& expr, int& level) {
                 case ' ':
                     expr++;
                     continue;
+                case '\0':
+                    return val;
                 default:
                     // Unknown symbol
                     throw std::runtime_error("Unknown symbol encountered");

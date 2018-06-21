@@ -99,3 +99,21 @@ TEST(Evaluator, MalformedExpressions) {
     ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
     EXPECT_EQ(nullptr, value);
 }
+
+TEST(Evaluator, FunctionsExpressions) {
+    ValueRef value;
+    
+    std::string expression = "(pi/2)";
+    const char* exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(1.570796326794897, value->evaluate(), 0.01);
+
+    expression = "12*sin(pi/2)";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(12, value->evaluate(), 0.000001);
+
+    expression = "12*sin()";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+}
