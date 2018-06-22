@@ -32,7 +32,7 @@ ValueRef parseNumber(const char*& str) {
                 _number.second += ch;
             }
         } else {
-            if (*str == '.' || *str == ',') {
+            if (*str == '.') {
                 if (bNumerator) {
                     bNumerator = false;
                 } else {
@@ -78,10 +78,8 @@ ValueRef parseNumber(const char*& str) {
  * @param[in] prio Operator priority when evaluating right-hand side argument.
  *       When evaluating left-hand side argument, must be equal to -1
  */
-static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1) {
-    ValueRef val;
-
-    for (; *expr == ' '; expr++); // Skip spaces
+static Values parseExpression(const char*& expr, int& level, size_t prio = -1) {
+    Values val { nullptr };
 
     for (; *expr; ) {
         switch (*expr) {
@@ -95,11 +93,23 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
                 expr++;
                 level--;
                 break;
+            case ' ':
+                // Skip spaces
+                expr++;
+                continue;
+                break;
+            case ',':
+                // Some functions may have several arguments
+                expr++;
+                auto exp = parseExpression(expr, level);
+                val.push_back(exp.back());
+                continue;
+                break;
         }
         break;
     }
 
-    if (!val) {
+    if (!val.back()) {
         for (const char* signaturePtr = expr; *signaturePtr; signaturePtr++) {
             int lowerCase = *signaturePtr - 'a';
             int upperCase = *signaturePtr - 'A';
@@ -113,9 +123,10 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
                     auto it = Function::registry.find(signature);
                     if (it != Function::registry.end()) {
                         // Function found
-//                        level++;
                         expr += signatureSize;
-                        return it->second(parseExpression(expr, level, -1));
+                        // Function may have multiple arguments
+                        // Gather all of them
+                        return { it->second(parseExpression(expr, level, -1)) };
                     }
                 } else {
                     // Not a function. Parse constants
@@ -123,12 +134,12 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
                     if (it != Constant::registry.end()) {
                         // Constant found
                         expr += signatureSize;
-                        val = it->second;
+                        val.back() = it->second;
                     }
                     
-                    if (!val) {
+                    if (!val.back()) {
                         // Not a constant. Parse number
-                        val = parseNumber(expr);
+                        val.back() = parseNumber(expr);
                     }
                     break;
                 }
@@ -137,7 +148,8 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
     }
     
     // Parse optional operator
-    while (*expr) {
+    bool bContinueLoop = true;
+    while (*expr && bContinueLoop) {
         // Find operator from registry
         auto opIt = Operator::registry.find(*expr);
         if (opIt != Operator::registry.end()) {
@@ -146,13 +158,15 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
             if (prio != (size_t)-1) {
                 // Now compare operator's priority over currently parsed one
                 if (opIt->second.first <= prio) {
-                    return val;
+                    break;
                 }
             }
             expr++;
-            val = opIt->second.second(val, parseExpression(expr,
-                                                           level,
-                                                           opIt->second.first));
+            auto rh = parseExpression(expr, level, opIt->second.first);
+            if (rh.empty()) {
+                throw std::runtime_error("Attempt to use operator with empty right-hand expression");
+            }
+            val.back() = opIt->second.second(val.back(), rh.back());
             continue;
         }
         switch (*expr) {
@@ -160,26 +174,40 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
                 if (level <= 0) {
                     throw std::runtime_error("Encountered closing bracket w/o opening one");
                 }
-                return val;
+                bContinueLoop = false;
+                break;
+            case ',': {
+                // Some functions may have several arguments
+                bContinueLoop = false;
+                break;
+            }
             case ' ':
                 expr++;
                 continue;
             case '\0':
-                return val;
+                bContinueLoop = false;
+                break;
             default:
                 // Unknown symbol
                 throw std::runtime_error("Encountered unknown symbol");
                 break;
         }
     }
+    // Remove last nulls
     return val;
 }
 
 ValueRef parseExpression(const char*& str) {
     int level = 0;
     auto val = parseExpression(str, level);
+    if (*str == ')') {
+        level--;
+    }
     if (level != 0) {
         throw std::runtime_error("Encountered opening bracket w/o closing one");
     }
-    return val;
+    if (!val.empty()) {
+        return val.back();
+    }
+    return nullptr;
 }

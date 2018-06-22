@@ -38,7 +38,7 @@ Nevertheless expressions `5*--2` is treated as erroneous as well as `5*++2`.
 
 ### Supported symbols ###
 * Symbols:
-*   `.`, `,` decimal separators
+*   `.` decimal separator
 *   `(`, `)` brackets
 *   spaces (ignored)
 
@@ -53,8 +53,9 @@ Nevertheless expressions `5*--2` is treated as erroneous as well as `5*++2`.
 * `atan` Taking arctanent() of argument
 * `asin` Taking arcsinus() of argument
 * `acos` Taking arccosinus() of argument
+* `hypot` Computes hypotenuse of a right-angled triangle whose legs are x and y. Takes two arguments X and Y.
 
-Functions can be nested, e.g. `sin(cos(pi))` is valid input.
+Functions can be nested, e.g. `sin(cos(pi))` is valid input. Functions may have few arguments delimited by `,`, e.g. `hypot(2,3)` is valid input. 
 
 Functions and constants may have same signature. 
 

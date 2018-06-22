@@ -1,4 +1,8 @@
 #pragma once
+#include <vector>
+#include "types.hpp"
+
+typedef std::vector<ValueRef> Values;
 
 /**
  * Generic value which can be evaluated

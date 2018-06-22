@@ -71,6 +71,12 @@ TEST(Evaluator, Expressions) {
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(480, value->evaluate());
+    
+    expression = "(1/2*5)+1/4*2";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NE(nullptr, value);
+    EXPECT_EQ(3, value->evaluate());
 
     expression = "3^3";
     exPtr = expression.c_str();
@@ -164,6 +170,35 @@ TEST(Evaluator, FunctionsExpressions) {
     EXPECT_NEAR(0, value->evaluate(), 0.000001);
 
     expression = "12*sin()";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+}
+
+TEST(Evaluator, FunctionsMultiArgExpressions) {
+    ValueRef value;
+    
+    std::string expression;
+    const char* exPtr;
+    expression = "hypot(1, 2)";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(2.2360680103302002, value->evaluate(), 0.0001);
+
+    expression = "hypot(1/2,4/8)";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(0.7071067812, value->evaluate(), 0.000001);
+
+    expression = "hypot((1/2*5)+1/4*2,4/8)";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(3.0413812651, value->evaluate(), 0.000001);
+
+    expression = "hypot((1/2*5)+1/4*2,4/8,123)";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+
+    expression = "hypot((1/2*5)+1/4*2)";
     exPtr = expression.c_str();
     ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
 }

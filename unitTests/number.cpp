@@ -39,13 +39,26 @@ TEST(Number, PositiveMultiDigit) {
 TEST(Number, PositiveFrac) {
     NumberRef num;
     
-    std::string textualNumber("123.567");
-    const char* str = textualNumber.c_str();
+    std::string textualNumber;
+    const char* str;
+
+    textualNumber = "123.567";
+    str = textualNumber.c_str();
+    
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(123, num->number().first);
     EXPECT_EQ(567U, num->number().second);
     EXPECT_EQ(*str, 0);
+
+    textualNumber = "123.567.987";
+    str = textualNumber.c_str();
+    
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_NE(nullptr, num);
+    EXPECT_EQ(123, num->number().first);
+    EXPECT_EQ(567U, num->number().second);
+    EXPECT_EQ(std::string(str), ".987");
 }
 
 TEST(Number, PositiveNull) {

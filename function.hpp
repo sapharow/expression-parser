@@ -4,13 +4,14 @@
 #include <unordered_map>
 #include <functional>
 #include <string>
+#include <vector>
 
 /**
  * Function is abstract interface for any function implementation
  */
 class Function : public Value {
 public:
-    typedef std::function<FunctionRef(const ValueRef&)> Create;
+    typedef std::function<FunctionRef(const Values&)> Create;
     typedef std::unordered_map<std::string, Create> Registry;
 
     /**
@@ -22,16 +23,17 @@ public:
      * Create function with argument
      *
      * @param[in] arg Argument
+     * @param[in] numArgs Expected number of arguments
      */
-    Function(const ValueRef& arg);
+    Function(const Values& arg, size_t numArgs);
 
     /**
      * Retrieve argument
      */
-    const ValueRef& arg() const;
+    const Values& arg() const;
     
 private:
-    ValueRef m_Arg;
+    Values m_Arg;
 };
 
 
@@ -41,7 +43,7 @@ private:
  */
 class SinusFunction : public Function {
 public:
-    SinusFunction(const ValueRef&);
+    SinusFunction(const Values&);
 
     // Overrides from Value
     float evaluate() override;
@@ -49,7 +51,7 @@ public:
 
 class CosinusFunction : public Function {
 public:
-    CosinusFunction(const ValueRef&);
+    CosinusFunction(const Values&);
     
     // Overrides from Value
     float evaluate() override;
@@ -57,7 +59,7 @@ public:
 
 class TanFunction : public Function {
 public:
-    TanFunction(const ValueRef&);
+    TanFunction(const Values&);
     
     // Overrides from Value
     float evaluate() override;
@@ -65,7 +67,7 @@ public:
 
 class ATanFunction : public Function {
 public:
-    ATanFunction(const ValueRef&);
+    ATanFunction(const Values&);
     
     // Overrides from Value
     float evaluate() override;
@@ -73,7 +75,7 @@ public:
 
 class ASinFunction : public Function {
 public:
-    ASinFunction(const ValueRef&);
+    ASinFunction(const Values&);
     
     // Overrides from Value
     float evaluate() override;
@@ -81,7 +83,15 @@ public:
 
 class ACosFunction : public Function {
 public:
-    ACosFunction(const ValueRef&);
+    ACosFunction(const Values&);
+    
+    // Overrides from Value
+    float evaluate() override;
+};
+
+class HypotFunction : public Function {
+public:
+    HypotFunction(const Values&);
     
     // Overrides from Value
     float evaluate() override;
