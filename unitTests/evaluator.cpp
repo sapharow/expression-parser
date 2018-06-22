@@ -135,6 +135,11 @@ TEST(Evaluator, FunctionsExpressions) {
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NEAR(12, value->evaluate(), 0.000001);
 
+    expression = "12*sin(cos(pi/2))";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(0, value->evaluate(), 0.000001);
+
     expression = "12*sin()";
     exPtr = expression.c_str();
     ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);

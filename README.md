@@ -1,6 +1,17 @@
 # What is that? #
 
-This is math expressions parser. It parses expressions into tree of expressions for further evaluation. Currently it provide `float`-based calculations but by rewriting `Number` class one can replace it by rational numbers to achieve better accuracy.
+This is math expressions parser. It parses expressions into tree of expressions for further evaluation. Currently it provide `float`-based calculations but by extending `Number` class one can substitute float by rational numbers to achieve better precision.
+
+Few assumptions been made:
+
+* Target system has contiguous standard ASCII table (compatible with ISO/IEC 8859-1)
+* The input is single-byte characters
+* No memory limitations. Building of the evaluation tree is done recursively inside of the brackets which can lead to memory overflow exception at certain nesting level (which is handled though).
+* Has reasonable performance avoiding duplicate jobs and extensive memory reallocations
+* Target compiler supports C++11 features
+* Source code must be built on *nix-family platforms (Ubuntu, MacOSX)
+* Source code must be cross-platform and can be easily adopted if needed
+
 
 # What is supported? #
 
@@ -40,6 +51,8 @@ Nevertheless expressions `5*--2` is treated as erroneous as well as `5*++2`.
 * `atan` Taking arctanent() of argument
 * `asin` Taking arcsinus() of argument
 * `acos` Taking arccosinus() of argument
+
+Functions can be nested, e.g. `sin(cos(pi))` is valid input.
 
 ### Operation errors ###
 
