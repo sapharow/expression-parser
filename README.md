@@ -56,6 +56,8 @@ Nevertheless expressions `5*--2` is treated as erroneous as well as `5*++2`.
 
 Functions can be nested, e.g. `sin(cos(pi))` is valid input.
 
+Functions and constants may have same signature. 
+
 ### Operation errors ###
 
 * Division by zero is supported. Currently function returns 0.0 and prints message.

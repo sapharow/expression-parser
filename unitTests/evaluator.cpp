@@ -147,6 +147,11 @@ TEST(Evaluator, FunctionsExpressions) {
     const char* exPtr = expression.c_str();
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NEAR(1.570796326794897, value->evaluate(), 0.01);
+    
+    expression = "(( e ) )";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NEAR(2.718281828459045, value->evaluate(), 0.01);
 
     expression = "12*sin(pi/2)";
     exPtr = expression.c_str();
