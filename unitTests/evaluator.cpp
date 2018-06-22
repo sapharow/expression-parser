@@ -2,16 +2,34 @@
 #include "evalUtils.hpp"
 #include "types.hpp"
 #include "number.hpp"
-/*
+
 TEST(Evaluator, SingleNumExpression) {
-    std::string expression = "1";
-    const char* exPtr = expression.c_str();
+    std::string expression;
+    const char* exPtr;
+
+    expression = "1";
+    exPtr = expression.c_str();
     ValueRef value;
+
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(1.0, value->evaluate());
+    EXPECT_EQ(0, *exPtr);
+
+    expression = "(1)";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NE(nullptr, value);
+    EXPECT_EQ(1.0, value->evaluate());
+    EXPECT_EQ(0, *exPtr);
+
+    expression = "()";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_EQ(nullptr, value);
+    EXPECT_EQ(0, *exPtr);
 }
-*/
+
 TEST(Evaluator, Expressions) {
     ValueRef value;
 
