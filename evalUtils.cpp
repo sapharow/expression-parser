@@ -65,7 +65,11 @@ ValueRef parseNumber(const char*& str) {
     }
 
     if (bNegative) {
+        if (_number.first > 0) {
             _number.first = -_number.first;
+        } else {
+            _number.second = -_number.second;
+        }
     }
     return std::make_shared<Number>(_number);
 }

@@ -42,6 +42,8 @@ Nevertheless expressions `5*--2` is treated as erroneous as well as `5*++2`.
 *   `(`, `)` brackets
 *   spaces (ignored)
 
+Fractional numbers can be written as `1.` which means `1.0`, or `.1` which means `0.1`
+
 ### Supported constants ###
 * `pi` PI number 3.141592653589793
 * `e` Euler's number
@@ -55,7 +57,7 @@ Nevertheless expressions `5*--2` is treated as erroneous as well as `5*++2`.
 * `acos` Taking arccosinus() of argument
 * `hypot` Computes hypotenuse of a right-angled triangle whose legs are x and y. Takes two arguments X and Y.
 
-Functions can be nested, e.g. `sin(cos(pi))` is valid input. Functions may have few arguments delimited by `,`, e.g. `hypot(2,3)` is valid input. 
+Functions can be nested, e.g. `sin(cos(pi))` is valid input. Functions may have few arguments delimited by `,` e.g. `hypot(sin(1),0.3)` is valid input. 
 
 Functions and constants may have same signature. 
 

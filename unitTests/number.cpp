@@ -11,7 +11,7 @@ TEST(Number, PositiveSingleDigit) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(1, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
     EXPECT_EQ(*str, 0);
 }
 
@@ -32,7 +32,7 @@ TEST(Number, PositiveMultiDigit) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(1235, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
     EXPECT_EQ(*str, 0);
 }
 
@@ -48,7 +48,7 @@ TEST(Number, PositiveFrac) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(123, num->number().first);
-    EXPECT_EQ(567U, num->number().second);
+    EXPECT_EQ(567, num->number().second);
     EXPECT_EQ(*str, 0);
 
     textualNumber = "123.567.987";
@@ -57,8 +57,21 @@ TEST(Number, PositiveFrac) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(123, num->number().first);
-    EXPECT_EQ(567U, num->number().second);
+    EXPECT_EQ(567, num->number().second);
     EXPECT_EQ(std::string(str), ".987");
+
+    textualNumber = ".567";
+    str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_NE(nullptr, num);
+    EXPECT_EQ(0, num->number().first);
+    EXPECT_EQ(567, num->number().second);
+    EXPECT_EQ(*str, 0);
+
+    textualNumber = ".";
+    str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_EQ(nullptr, num);
 }
 
 TEST(Number, PositiveNull) {
@@ -89,7 +102,7 @@ TEST(Number, NegativeSingleDigit) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(-1, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
     EXPECT_EQ(*str, 0);
 }
 
@@ -110,7 +123,7 @@ TEST(Number, NegativeMultiDigit) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(-1234, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
     EXPECT_EQ(*str, 0);
 }
 
@@ -122,7 +135,15 @@ TEST(Number, NegativeFrac) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(-1234, num->number().first);
-    EXPECT_EQ(567U, num->number().second);
+    EXPECT_EQ(567, num->number().second);
+    EXPECT_EQ(*str, 0);
+
+    textualNumber = "-.567";
+    str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_NE(nullptr, num);
+    EXPECT_EQ(0, num->number().first);
+    EXPECT_EQ(-567, num->number().second);
     EXPECT_EQ(*str, 0);
 }
 
@@ -146,12 +167,12 @@ TEST(Number, DigitWithTrailingGarbage) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(1, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
 
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(2, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
     EXPECT_EQ(*str, 0);
 
     textualNumber = "1/2";
@@ -159,7 +180,7 @@ TEST(Number, DigitWithTrailingGarbage) {
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_NE(nullptr, num);
     EXPECT_EQ(1, num->number().first);
-    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(0, num->number().second);
 
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_EQ(nullptr, num);

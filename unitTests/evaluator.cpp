@@ -125,6 +125,11 @@ TEST(Evaluator, MalformedExpressions) {
     ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
     EXPECT_EQ(nullptr, value);
     
+    expression = "1+1qsd";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    EXPECT_EQ(nullptr, value);
+
     expression = "1+2)";
     exPtr = expression.c_str();
     ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
