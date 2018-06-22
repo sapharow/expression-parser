@@ -1,7 +1,7 @@
 #include "evalUtils.hpp"
 #include "operator.hpp"
-#include "functions.hpp"
-#include "constants.hpp"
+#include "function.hpp"
+#include "constant.hpp"
 #include "number.hpp"
 
 /**
@@ -11,7 +11,7 @@
 ValueRef parseNumber(const char*& str) {
     const char* originalPtr = str;
     bool bNumerator = true;
-    bool bNegative = true;
+    bool bNegative = false;
     
     // negative first component is a flag we didn't encounter digit
     CompoundNumber _number = { -1, 0 };
@@ -113,8 +113,8 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
                     auto it = Function::registry.find(signature);
                     if (it != Function::registry.end()) {
                         // Function found
-                        level++;
-                        expr += signatureSize+1;
+//                        level++;
+                        expr += signatureSize;
                         return it->second(parseExpression(expr, level, -1));
                     }
                 } else {
@@ -158,7 +158,7 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
         switch (*expr) {
             case ')':
                 if (level <= 0) {
-                    throw std::runtime_error("Closing bracket w/o opening one");
+                    throw std::runtime_error("Encountered closing bracket w/o opening one");
                 }
                 return val;
             case ' ':
@@ -168,7 +168,7 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
                 return val;
             default:
                 // Unknown symbol
-                throw std::runtime_error("Unknown symbol encountered");
+                throw std::runtime_error("Encountered unknown symbol");
                 break;
         }
     }
@@ -177,5 +177,9 @@ static ValueRef parseExpression(const char*& expr, int& level, size_t prio = -1)
 
 ValueRef parseExpression(const char*& str) {
     int level = 0;
-    return parseExpression(str, level);
+    auto val = parseExpression(str, level);
+    if (level != 0) {
+        throw std::runtime_error("Encountered opening bracket w/o closing one");
+    }
+    return val;
 }

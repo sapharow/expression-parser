@@ -10,6 +10,8 @@ add_library (exParLib
     number.cpp
     number.hpp
     operator.cpp
+    function.cpp
+    constant.cpp
     )
 
 add_executable (exPar

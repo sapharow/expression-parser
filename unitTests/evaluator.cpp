@@ -115,6 +115,11 @@ TEST(Evaluator, MalformedExpressions) {
     exPtr = expression.c_str();
     ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
     EXPECT_EQ(nullptr, value);
+    
+    expression = "(1+2)+((1";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    EXPECT_EQ(nullptr, value);
 }
 
 TEST(Evaluator, FunctionsExpressions) {

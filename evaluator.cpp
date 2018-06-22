@@ -20,5 +20,5 @@ Evaluate::Evaluate(const std::string& expr) {
 }
 
 Evaluate::operator float() {
-    return 0;
+    return m_Value;
 }

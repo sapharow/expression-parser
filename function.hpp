@@ -46,3 +46,43 @@ public:
     // Overrides from Value
     float evaluate() override;
 };
+
+class CosinusFunction : public Function {
+public:
+    CosinusFunction(const ValueRef&);
+    
+    // Overrides from Value
+    float evaluate() override;
+};
+
+class TanFunction : public Function {
+public:
+    TanFunction(const ValueRef&);
+    
+    // Overrides from Value
+    float evaluate() override;
+};
+
+class ATanFunction : public Function {
+public:
+    ATanFunction(const ValueRef&);
+    
+    // Overrides from Value
+    float evaluate() override;
+};
+
+class ASinFunction : public Function {
+public:
+    ASinFunction(const ValueRef&);
+    
+    // Overrides from Value
+    float evaluate() override;
+};
+
+class ACosFunction : public Function {
+public:
+    ACosFunction(const ValueRef&);
+    
+    // Overrides from Value
+    float evaluate() override;
+};
