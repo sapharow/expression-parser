@@ -2,8 +2,7 @@
 
 int main(int, char**) {
     
-//    const char * expression = "3*5*((10/5)+((1+2)+3))*4";
-    const char * expression = "3*5*((10/5)+((1";
+    const char * expression = "54/((2+25)*4)+0.25+sin(12/pi*cos(e))";
     const float result = Evaluate( expression );
     printf ( "%s = %f\n", expression, result );
     return 0;
