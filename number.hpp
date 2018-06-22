@@ -3,7 +3,7 @@
 #include "value.hpp"
 #include "types.hpp"
 
-typedef std::pair<int64_t, uint64_t> CompoundNumber;
+typedef std::pair<int64_t, int64_t> CompoundNumber;
 
 /**
  * Number implementation
