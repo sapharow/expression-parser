@@ -15,6 +15,15 @@ TEST(Number, PositiveSingleDigit) {
     EXPECT_EQ(*str, 0);
 }
 
+TEST(Number, PositiveMalformedSingleDigit) {
+    NumberRef num;
+    
+    std::string textualNumber("++1");
+    const char* str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_EQ(nullptr, num);
+}
+
 TEST(Number, PositiveMultiDigit) {
     NumberRef num;
     
@@ -71,6 +80,15 @@ TEST(Number, NegativeSingleDigit) {
     EXPECT_EQ(*str, 0);
 }
 
+TEST(Number, NegativeMalformedSingleDigit) {
+    NumberRef num;
+    
+    std::string textualNumber("--1");
+    const char* str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_EQ(nullptr, num);
+}
+
 TEST(Number, NegativeMultiDigit) {
     NumberRef num;
     
@@ -102,4 +120,36 @@ TEST(Number, NaN) {
     const char* str = textualNumber.c_str();
     ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
     EXPECT_EQ(nullptr, num);
+}
+
+TEST(Number, DigitWithTrailingGarbage) {
+    NumberRef num;
+    
+    std::string textualNumber;
+    const char* str;
+    
+    textualNumber = "1+2";
+    str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_NE(nullptr, num);
+    EXPECT_EQ(1, num->number().first);
+    EXPECT_EQ(0U, num->number().second);
+
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_NE(nullptr, num);
+    EXPECT_EQ(2, num->number().first);
+    EXPECT_EQ(0U, num->number().second);
+    EXPECT_EQ(*str, 0);
+
+    textualNumber = "1/2";
+    str = textualNumber.c_str();
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_NE(nullptr, num);
+    EXPECT_EQ(1, num->number().first);
+    EXPECT_EQ(0U, num->number().second);
+
+    ASSERT_NO_THROW(num = std::dynamic_pointer_cast<Number>(parseNumber(str)));
+    EXPECT_EQ(nullptr, num);
+    EXPECT_EQ(std::string(str), "/2");
+
 }

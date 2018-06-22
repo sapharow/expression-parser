@@ -3,11 +3,11 @@
 #include <math.h>
 
 Operator::Registry Operator::registry = {
-    { '+', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorAdd>(l,r); }},
-    { '-', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorSubtract>(l,r); }},
-    { '/', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorDivide>(l,r); }},
-    { '*', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorMultiply>(l,r); }},
-    { '^', [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorPower>(l,r); }},
+    { '+', {0, [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorAdd>(l,r); }}},
+    { '-', {0, [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorSubtract>(l,r); }}},
+    { '/', {1, [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorDivide>(l,r); }}},
+    { '*', {1, [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorMultiply>(l,r); }}},
+    { '^', {2, [](const ValueRef& l, const ValueRef& r) { return std::make_shared<OperatorPower>(l,r); }}},
 };
 
 Operator::Operator(const ValueRef& left,

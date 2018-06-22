@@ -7,7 +7,13 @@
 class Operator : public Value {
 public:
     typedef std::function<OperatorRef(const ValueRef&, const ValueRef&)> Create;
-    typedef std::unordered_map<char, Create> Registry;
+    /**
+     * Registry of operators consists of pair key-value where key is operator
+     * signature character and value is pair of operator priority and fabric
+     * method.
+     * Operators with higher priority will be parsed first
+     */
+    typedef std::unordered_map<char, std::pair<size_t, Create>> Registry;
 
     /**
      * Global operators registry

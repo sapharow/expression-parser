@@ -2,7 +2,7 @@
 #include "evalUtils.hpp"
 #include "types.hpp"
 #include "number.hpp"
-
+/*
 TEST(Evaluator, SingleNumExpression) {
     std::string expression = "1";
     const char* exPtr = expression.c_str();
@@ -11,12 +11,21 @@ TEST(Evaluator, SingleNumExpression) {
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(1.0, value->evaluate());
 }
-
+*/
 TEST(Evaluator, Expressions) {
     ValueRef value;
 
-    std::string expression = "1+1";
-    const char* exPtr = expression.c_str();
+    std::string expression;
+    const char* exPtr;
+    
+    expression = "54/2+4";
+    exPtr = expression.c_str();
+    ASSERT_NO_THROW(value = parseExpression(exPtr));
+    EXPECT_NE(nullptr, value);
+    EXPECT_EQ(31, value->evaluate());
+
+    expression = "1+1";
+    exPtr = expression.c_str();
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(2.0, value->evaluate());
@@ -74,6 +83,14 @@ TEST(Evaluator, Expressions) {
     ASSERT_NO_THROW(value = parseExpression(exPtr));
     EXPECT_NE(nullptr, value);
     EXPECT_EQ(-6, value->evaluate());
+
+    expression = "5*++2";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
+    
+    expression = "3*--2";
+    exPtr = expression.c_str();
+    ASSERT_THROW(value = parseExpression(exPtr), std::runtime_error);
 }
 
 TEST(Evaluator, MalformedExpressions) {
