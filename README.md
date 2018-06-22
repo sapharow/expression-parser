@@ -22,7 +22,9 @@ Few assumptions been made:
 *   `/`  divide
 *   `^`  power
 
+
 Priorities (from high to low): 
+
 * `^` has highest priority after brackets
 * `*` and `/` have same medium priority
 * `+` and `-` have same lowest priority
