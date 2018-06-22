@@ -61,7 +61,7 @@ Functions can be nested, e.g. `sin(cos(pi))` is valid input.
 
 # How to build #
 
-You have CMake 3.0 or higher installed. Tested with `g++ 6.3` and `clang (LLVM 9.1.0)`. Compiler must support C++11.
+You have CMake 3.0 or higher installed. Tested with `g++ 4.8, g++ 5.5, g++ 6.3, g++ 7.3` and `clang (LLVM 9.1.0)` compilers.
 
 Checkout repo with `git clone` and the initialise submodules as it depends on Google Test for unit-tests to be run. Then type `git submodule update --recursive --init` to checkout Google Test dependency.
 
